@@ -202,5 +202,17 @@
     "status": "completed",
     "stellarTxId": "mock_ac11f738a3e9c8449bc0adb098d775b7",
     "idempotencyKey": null
+  },
+  {
+    "id": "7",
+    "amount": 10.5,
+    "donor": "GBRPYHIL2CI3WHZDTOOQFC6EB4KJJGUJMUC5XNODMZTQYBB5XYZXYUU",
+    "recipient": "GBBD47UZQ5EYJYJMZXZYDUC77SAZXSQEA7XJJGTAY5XJJGUJMUC5XNOD",
+    "memo": "",
+    "timestamp": "2026-02-21T06:31:30.751Z",
+    "status": "completed",
+    "stellarTxId": "mock_0505b8dceb3c9847b35372538f862d97",
+    "stellarLedger": null,
+    "statusUpdatedAt": "2026-02-21T06:31:30.751Z"
   }
 ]

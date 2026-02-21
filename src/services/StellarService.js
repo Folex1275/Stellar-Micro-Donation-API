@@ -4,6 +4,7 @@
  */
 
 const StellarSdk = require('stellar-sdk');
+const StellarErrorHandler = require('../utils/stellarErrorHandler');
 
 class StellarService {
   constructor(config = {}) {
