@@ -1,6 +1,6 @@
 /**
  * Jest Configuration
- * Test runner configuration for Stellar Micro Donation API
+ * Test runner configuration for Stellar Micro-Donation API
  */
 
 module.exports = {
@@ -21,4 +21,5 @@ module.exports = {
   },
   verbose: true,
   testTimeout: 10000,
+  setupFiles: ['<rootDir>/tests/setup.js'],
 };
