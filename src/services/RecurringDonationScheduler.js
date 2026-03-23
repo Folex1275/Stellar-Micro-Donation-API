@@ -13,12 +13,13 @@
 const MockStellarService = require('./MockStellarService');
 const { SCHEDULE_STATUS, DONATION_FREQUENCIES } = require('../constants');
 const log = require('../utils/log');
-const IdempotencyService = require('./IdempotencyService');
+const { revokeExpiredDeprecatedKeys } = require('../models/apiKeys');
 const {
   withBackgroundContext,
   withAsyncContext,
   getCorrelationSummary,
 } = require("../utils/correlation");
+const { revokeExpiredDeprecatedKeys } = require('../models/apiKeys');
 
 class RecurringDonationScheduler {
   /**
@@ -142,17 +143,14 @@ class RecurringDonationScheduler {
 
       await Promise.allSettled(promises);
 
-      // Hourly idempotency key cleanup
-      if (Date.now() - this.lastCleanupAt >= this.cleanupInterval) {
-        this.lastCleanupAt = Date.now();
-        try {
-          const deleted = await IdempotencyService.cleanupExpired();
-          if (deleted > 0) {
-            log.info('RECURRING_SCHEDULER', `Cleaned up ${deleted} expired idempotency key(s)`);
-          }
-        } catch (err) {
-          log.error('RECURRING_SCHEDULER', 'Failed to clean up idempotency keys', { error: err.message });
+      // Auto-revoke deprecated API keys whose grace period has elapsed
+      try {
+        const revokedCount = await revokeExpiredDeprecatedKeys();
+        if (revokedCount > 0) {
+          log.info('RECURRING_SCHEDULER', 'Auto-revoked expired deprecated API keys', { revokedCount });
         }
+      } catch (revokeError) {
+        log.error('RECURRING_SCHEDULER', 'Failed to auto-revoke expired API keys', { error: revokeError.message });
       }
     } catch (error) {
       log.error("RECURRING_SCHEDULER", "Error processing schedules", {
